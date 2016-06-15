@@ -18,8 +18,6 @@ class RulerModel(PythonModel):
     '''
     def __init__(self, RSDialog):
       PythonModel.__init__(self)
-#       self.useClipPlane = False
-#       self.display = True
       
       self.metric = False
       
@@ -45,18 +43,9 @@ class RulerModel(PythonModel):
       hdpi, vdpi = self.RSDialog.hdpi, self.RSDialog.vdpi
       if hdpi == 0 or vdpi == 0:
         return
-#       glDisable(GL_DEPTH_TEST)
-#       glDisable(GL_SCISSOR_TEST)
-#       glDisable(GL_LIGHTING)
-#       glDisable(GL_STENCIL_TEST)
-#       glDisable(GL_TEXTURE_2D)
-#       glDisable(GL_CULL_FACE)
       
-#       glPushMatrix()
-#       glLoadIdentity()
       
       glLineWidth(1.0)
-#       glEnable(GL_LINE_SMOOTH)
       glDisable(GL_LINE_SMOOTH)
       
       units = self.RSDialog.ruler_grid_units
@@ -98,8 +87,3 @@ class RulerModel(PythonModel):
         _drawTick(0,1)
           
         glEnd()
-      
-      
-      
-      
-#       glPopMatrix()
