@@ -193,9 +193,9 @@ class Realscale_Dialog(ModelessDialog):
       chimera.viewer.setViewSizeAndScaleFactor(chimera.viewer.viewSize,self.scale_to_lock)
     if self.hdpi != 0:
       w,h = chimera.viewer.windowSize
-      print 'Inches wide: ',  float(w) / self.hdpi
+#       print 'Inches wide: ',  float(w) / self.hdpi
 #       chimera.viewer.viewSize = float(w) / self.hdpi
-      chimera.viewer.setViewSizeAndScaleFactor(float(w) / self.hdpi, chimera.viewer.scaleFactor)
+      chimera.viewer.setViewSizeAndScaleFactor(0.5 * w / self.hdpi, chimera.viewer.scaleFactor)
       
       
     
@@ -222,6 +222,7 @@ class Realscale_Dialog(ModelessDialog):
   # ---------------------------------------------------------------------------
   #
   def settings_changed_cb(self, event = None, model_id = None):
+#     print "Setting changed cb called!"
     if not self.lock_scale:
       self.scale_to_lock = chimera.viewer.scaleFactor
     self.lock_scale = self._lock_scale.get()
@@ -321,18 +322,19 @@ class Realscale_Dialog(ModelessDialog):
 
   def reset_inches_cb(self):
     self.scale_to_lock = 1.0
-    chimera.viewer.setViewSizeAndScaleFactor(chimera.viewer.viewSize,self.scale_to_lock)
     chimera.viewer.viewAll()
+    chimera.viewer.setViewSizeAndScaleFactor(chimera.viewer.viewSize,self.scale_to_lock)
+    
     
   def reset_cm_cb(self):
-    self.scale_to_lock = 10 * mm2infactor
-    chimera.viewer.setViewSizeAndScaleFactor(chimera.viewer.viewSize,self.scale_to_lock)
+    self.scale_to_lock = 10.0 * mm2infactor
     chimera.viewer.viewAll()
+    chimera.viewer.setViewSizeAndScaleFactor(chimera.viewer.viewSize,self.scale_to_lock)
     
   def reset_mm_cb(self):
-    self.scale_to_lock = mm2infactor
-    chimera.viewer.setViewSizeAndScaleFactor(chimera.viewer.viewSize,self.scale_to_lock)
+    self.scale_to_lock = 1.0 * mm2infactor
     chimera.viewer.viewAll()
+    chimera.viewer.setViewSizeAndScaleFactor(chimera.viewer.viewSize,self.scale_to_lock)
  
   def make_ruler(self):
     if not self.ruler_model:
