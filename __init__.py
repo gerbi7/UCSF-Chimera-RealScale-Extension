@@ -7,6 +7,7 @@ from chimera.baseDialog import ModelessDialog
 
 import Tkinter
 from CGLtk import Hybrid
+from GridModel import GridModel
 
 mm2infactor = 0.0393701 # ratio of in/mm
 # -----------------------------------------------------------------------------
@@ -18,7 +19,7 @@ class Realscale_Dialog(ModelessDialog):
   hdpi = vdpi = 0
   ruler_grid_units = None
 
-  ruler_model = None
+  ruler_model = grid_model = None
   
   title = 'Real Scale'
   name = 'Real Scale'
@@ -231,7 +232,14 @@ class Realscale_Dialog(ModelessDialog):
     self.disable_viewer_forcing = self._disable_viewer_forcing.get()
     self.show_ruler = self._show_ruler.get()
     self.show_grid = self._show_grid.get()
-    self.ruler_grid_units = self._ruler_grid_units.get()
+    
+    rgu = self._ruler_grid_units.get()
+    if rgu != self.ruler_grid_units:
+      if self.ruler_model:
+        self.ruler_model.setMajorChange()
+      if self.grid_model:
+        self.grid_model.setMajorChange()
+    self.ruler_grid_units = rgu
     
     if not self.disable_viewer_forcing:
       chimera.viewer.camera.ortho = True
@@ -239,9 +247,16 @@ class Realscale_Dialog(ModelessDialog):
     if self.show_ruler:
       self.make_ruler()
       self.ruler_model.display = True
-      self.ruler_model.setMajorChange()
+#       self.ruler_model.setMajorChange()
     elif self.ruler_model:
       self.ruler_model.display = False
+    if self.show_grid:
+      self.make_grid()
+      self.grid_model.display = True
+#       self.grid_model.setMajorChange()
+    elif self.grid_model:
+      self.grid_model.display = False    
+    
   
   def monitor_scale_cb(self, event = None, model_id = None):
     manual = self._manual_monitor_conf.get()
@@ -286,6 +301,8 @@ class Realscale_Dialog(ModelessDialog):
     
     if self.ruler_model:
       self.ruler_model.setMajorChange()
+    if self.grid_model:
+      self.grid_model.setMajorChange()
   
   def _get_dpi(self, value, units, direction):
     if units.get() == 'dpi':
@@ -339,7 +356,12 @@ class Realscale_Dialog(ModelessDialog):
   def make_ruler(self):
     if not self.ruler_model:
       self.ruler_model = RulerModel(self)
-      chimera.openModels.add([self.ruler_model], hidden =True)
+      chimera.openModels.add([self.ruler_model], hidden = True)
+      
+  def make_grid(self):
+    if not self.grid_model:
+      self.grid_model = GridModel(self)
+      chimera.openModels.add([self.grid_model], hidden = True)
  
 # -----------------------------------------------------------------------------
 #
